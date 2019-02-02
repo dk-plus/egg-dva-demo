@@ -1,0 +1,16 @@
+{
+  "entry": "./src/index.js",
+  "outputPath": "../app/public",
+  "env": {
+    "production": {
+      "publicPath": "/public/"
+    }
+  },
+  "extraBabelPlugins": [
+    ["import", {
+      "libraryName": "antd",
+      "libraryDirectory": "es",
+      "style": true
+    }]
+  ]
+}
