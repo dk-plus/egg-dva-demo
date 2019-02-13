@@ -8,10 +8,9 @@ export default {
 
   namespace: 'user',
 
-  state: extend(true, {}, stateData),
-  // state: {
-  //   ...stateData,
-  // },
+  state: {
+    ...stateData,
+  },
 
   subscriptions: {
     setup({ dispatch, history }) {  // eslint-disable-line

@@ -26,8 +26,10 @@ module.exports = {
   [`POST /api/login`](req, res) {
 
     res.status(200).json({
-      code: 200,
-      msg: 'hello'
+      errorMessage: '',
+      returnCode: '0',
+      returnMessage: 'success',
+      returnValue: {},
     });
   }
 }

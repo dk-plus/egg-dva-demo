@@ -31,6 +31,16 @@ function RouterConfig({ history, app }) {
       path: '/products',
       models: () => [import('./models/products')],
       component: () => import('./routes/Products'),
+    },
+    {
+      path: '/template',
+      models: () => [import('./models/template')],
+      component: () => import('./routes/activity/Template'),
+    },
+    {
+      path: '/template/edit',
+      models: () => [import('./models/template')],
+      component: () => import('./routes/activity/Edit'),
     }
   ];
   return (

@@ -14,15 +14,19 @@ const menu = [{
   key: 'home',
   title: '首页',
   url: '/home',
-  // children: [{
-  //   key: '1',
-  //   title: '哈哈',
-  //   url: '/',
-  // }],
-},{
-  key: 'products',
-  title: '产品',
-  url: '/products',
+}, {
+//   key: 'activity',
+//   title: '活动管理',
+//   url: '/activity',
+//   children: [{
+//     key: 'template',
+//     title: 'h5模板',
+//     url: '/template',
+//   }],
+// },{
+  key: 'template',
+  title: 'h5模板',
+  url: '/template',
 }];
 
 const menuMap = arrayToKeyValue(menu, 'url', 'title');
@@ -33,9 +37,10 @@ class MyLayout extends React.Component {
   render() {
     const { children, history: { location } } = this.props;
     console.log(location)
+    console.log(siderMap)
 
     return (
-      <Layout style={{height: '100%'}}>
+      <Layout>
         <Header>
           <div style={{color: '#fff'}}>dva-demo</div>
         </Header>

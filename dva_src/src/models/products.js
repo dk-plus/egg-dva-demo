@@ -1,4 +1,3 @@
-import { extend } from '../utils/utils';
 import * as productsService from '../services/products';
 
 const stateData = {
@@ -9,7 +8,6 @@ export default {
 
   namespace: 'products',
 
-  // state: extend(true, {}, stateData),
   state: {
     ...stateData
   },

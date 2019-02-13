@@ -4,6 +4,9 @@
   "env": {
     "production": {
       "publicPath": "/public/"
+    },
+    "development": {
+      "publicPath": "/"
     }
   },
   "extraBabelPlugins": [
