@@ -1,16 +1,23 @@
 import React, { Fragment } from 'react';
 import { connect } from 'dva';
 import { Link } from 'dva/router';
-import { Card, Table, Button, Divider, Tag, Popconfirm, Timeline, Popover, Form } from 'antd';
+import { Card, Table, Button, Divider, Tag, Popconfirm, Timeline, Popover, Form, Input, Row, Col, Select, DatePicker } from 'antd';
 import moment from 'moment';
+import { formItemLayout } from '../../components/BaseLayout';
 import { ONLINE_STATUS } from '../../utils/enum';
 
 const TimelineItem = Timeline.Item;
 const FormItem = Form.Item;
+const { Option } = Select;
+const { RangePicker } = DatePicker;
 
 class Template extends React.Component {
   constructor(props) {
     super(props);
+  }
+
+  state = {
+    queryForm: {},
   }
 
   componentDidMount() {
@@ -18,12 +25,20 @@ class Template extends React.Component {
     dispatch({
       type: 'template/fetch',
     });
+
+    this.loadData();
   }
   componentWillUnmount() {
     const { dispatch } = this.props;
     dispatch({
       type: 'template/initState',
     });
+  }
+
+  // 加载数据
+  loadData() {
+    const { location, history } = this.props;
+    console.log(location, history);
   }
 
   // 查询
@@ -68,6 +83,7 @@ class Template extends React.Component {
     </Fragment>    
   }
 
+  // 时间轴
   renderTime(timeArr) {
     return <Fragment>
       <Timeline>
@@ -82,11 +98,94 @@ class Template extends React.Component {
     </Fragment>
   }
 
+  // 操作
+  renderOperation() {
+    const { location: { pathname } } = this.props;
+    return <Fragment>
+      <Row type="flex" justify="space-between" style={{marginBottom: '20px'}}>
+        <Col>
+          <Button type="primary"><Link to={`${pathname}/edit`}>新建</Link></Button>
+        </Col>
+        <Col>
+          <Button type="primary">查询</Button>
+          <Divider type="vertical" />
+          <Button>重置</Button>
+        </Col>
+      </Row>
+    </Fragment>
+  }
+
   renderForm() {
     const { template: { list }, location: { pathname }, form } = this.props;
-    <Form>
-      <FormItem></FormItem>
-    </Form>
+    const { queryForm } = this.state;
+    const { getFieldDecorator } = form;
+    const rowGutter = { xs: 8, sm: 16, md: 16, lg: 24 };
+    const colSpan = { xs: 24, sm: 12, md: 8, lg: 8 };
+    return <Fragment>
+      <Form>
+        <Row gutter={rowGutter}>
+          <Col {...colSpan}>
+            <FormItem label="ID" {...formItemLayout}>
+              {getFieldDecorator('id', {
+                initialValue: queryForm.f_Id,
+              })(
+                <Input placeholder="请输入ID" />
+              )}
+            </FormItem>
+          </Col>
+          <Col {...colSpan}>
+            <FormItem label="活动名称" {...formItemLayout}>
+              {getFieldDecorator('name', {
+                initialValue: queryForm.f_Name,
+              })(
+                <Input placeholder="请输入活动名称" />
+              )}
+              </FormItem>
+            </Col>
+            <Col {...colSpan}>
+              <FormItem label="标题" {...formItemLayout}>
+                {getFieldDecorator('title', {
+                  initialValue: queryForm.f_Title,
+                })(
+                  <Input placeholder="请输入标题" />
+                )}
+              </FormItem>
+          </Col>
+        </Row>
+        <Row gutter={rowGutter}>
+          <Col {...colSpan}>
+            <FormItem label="状态" {...formItemLayout}>
+              {getFieldDecorator('status', {
+                initialValue: queryForm.f_Status,
+              })(
+                <Select placeholder="请选择状态">
+                  <Option key={ONLINE_STATUS.ONLINE} value={ONLINE_STATUS.ONLINE}>上线</Option>
+                  <Option key={ONLINE_STATUS.OFFLINE} value={ONLINE_STATUS.OFFLINE}>下线</Option>
+                </Select>
+              )}
+            </FormItem>
+          </Col>
+          <Col {...colSpan}>
+            <FormItem label="创建时间" {...formItemLayout}>
+              {getFieldDecorator('createTime', {
+                initialValue: queryForm.f_CreateTime,
+              })(
+                <RangePicker />
+              )}
+            </FormItem>
+          </Col>
+          <Col {...colSpan}>
+            <FormItem label="更新时间" {...formItemLayout}>
+              {getFieldDecorator('updateTime', {
+                initialValue: queryForm.f_UpdateTime,
+              })(
+                <RangePicker />
+              )}
+            </FormItem>
+          </Col>
+        </Row>
+      </Form>
+    </Fragment>
   }
 
   render() {
@@ -143,7 +242,9 @@ class Template extends React.Component {
       }
     }];
     return (
-      <Card title="h5模板">
+      <Card bordered={false}>
+        {this.renderForm()}
+        {this.renderOperation()}
         <Table
           columns={columns}
           dataSource={list}

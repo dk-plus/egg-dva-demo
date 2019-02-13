@@ -1,4 +1,4 @@
-import {request, post, postData} from '../utils/request';
+import { request, post, postData } from '../utils/request';
 
 export function getList(args) {
   return postData('/api/activity/queryAll', args);
