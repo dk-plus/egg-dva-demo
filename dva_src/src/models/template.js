@@ -1,4 +1,5 @@
 import * as templateService from '../services/template';
+import { queryToCommom } from '../utils/utils';
 
 const stateData = {
   list: [],
@@ -20,14 +21,19 @@ export default {
 
   effects: {
     *initState({ payload }, { call, put }) {
-      yield put({ type: 'save', payload: {} });
+      yield put({ type: 'save', payload: {...stateData} });
     },
 
-    *fetch({ payload }, { call, put }) {  // eslint-disable-line
+    *fetch({ payload: { params } }, { call, put }) {  // eslint-disable-line
+      params = params || {};
+
       const data = {
         list: [],
       };
-      const result = yield call(templateService.getList);
+      const options = {
+        ...queryToCommom(params)
+      };
+      const result = yield call(templateService.getList, options);
       if (result && result.returnCode === '0' && result.returnValue) {
         data.list = result.returnValue.content;
       }
@@ -46,6 +52,20 @@ export default {
       }
       yield put({ type: 'save', payload: data });
       
+      return result;
+    },
+
+    *edit({ payload: { params } }, { call, put }) {  // eslint-disable-line
+      params = params || {};
+
+      const data = {
+        list: [],
+      };
+
+      const result = yield call(templateService.edit, params);
+
+      yield put({ type: 'save', payload: data });
+
       return result;
     },
   },

@@ -1,8 +1,14 @@
 import React from 'react';
 import { Router, Route, Switch, routerRedux } from 'dva/router';
 import dynamic from 'dva/dynamic';
-import { Card, Spin } from 'antd';
+import { Card, Spin, LocaleProvider } from 'antd';
 import MyLayout from './components/MyLayout';
+import zh_CN from 'antd/lib/locale-provider/zh_CN';
+import moment from 'moment';
+import 'moment/locale/zh-cn';
+import { parseQuery } from './utils/utils';
+
+moment.locale('zh-cn');
 
 const { ConnectedRouter } = routerRedux;
 
@@ -18,10 +24,12 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
 );
 
 function RouterConfig({ history, app }) {
+
   const Login = dynamic({
     app,
     component: () => import('./routes/Login'),
   });
+
   const routes = [
     {
       path: '/home',
@@ -43,22 +51,29 @@ function RouterConfig({ history, app }) {
       component: () => import('./routes/activity/Edit'),
     }
   ];
+
+  history.listen((location) => {
+    location.query = parseQuery(location.search);
+  });
+
   return (
-      <Router history={history}>
-      <Switch>
-        <Route path="/login" component={Login}/>
-        <MyLayout history={history}>
-          {
-            routes.map(({ path, ...dynamics }, key) => (
-              <PrivateRoute exact key={key} path={path} component={dynamic({
-                app,
-                ...dynamics
-              })} />
-            ))
-          }
-        </MyLayout>
-      </Switch>
-      </Router>
+      <LocaleProvider locale={zh_CN}>
+        <Router history={history}>
+        <Switch>
+          <Route path="/login" component={Login}/>
+          <MyLayout history={history}>
+            {
+              routes.map(({ path, ...dynamics }, key) => (
+                <PrivateRoute exact key={key} path={path} component={dynamic({
+                  app,
+                  ...dynamics
+                })} />
+              ))
+            }
+          </MyLayout>
+        </Switch>
+        </Router>
+      </LocaleProvider>
   );
 }
 

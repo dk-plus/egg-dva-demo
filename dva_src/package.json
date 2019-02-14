@@ -7,15 +7,16 @@
     "precommit": "npm run lint"
   },
   "dependencies": {
+    "@babel/runtime": "7.0.0-beta.46",
     "antd": "^3.12.3",
     "babel-plugin-import": "^1.11.0",
     "dva": "^2.1.0",
     "dva-loading": "^2.0.6",
     "mockjs": "^1.0.1-beta3",
+    "query-string": "^6.2.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
-    "redux-logger": "^3.0.6",
-    "@babel/runtime": "7.0.0-beta.46"
+    "redux-logger": "^3.0.6"
   },
   "devDependencies": {
     "babel-plugin-dva-hmr": "^0.3.2",

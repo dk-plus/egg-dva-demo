@@ -4,71 +4,65 @@ module.exports = {
 
   [`POST /api/activity/queryAll`](req, res) {
 
+    let num = Math.floor(Math.random()*100);
+    let arr = [];
+    for (let i = 0; i < num; i++) {
+      let obj = {
+        name: `圣诞活动${i+1}`,
+        id: i+1,
+        title: '迎春接福发发发嗷嗷的',
+        createTime: new Date().valueOf() - Math.floor(Math.random()*10*60*1000),
+        creator: i % 2 === 0 ? 'dkplus' : 'bingli',
+        updateTime: new Date().valueOf() + Math.floor(Math.random()*10*60*1000),
+        updatePerson: i % 2 !== 0 ? 'dkplus' : 'bingli',
+        status: i % 3 === 0 ? 0 : 1,
+        beginTime: new Date().valueOf() - Math.floor(Math.random()*10*60*1000),
+        endTime: new Date().valueOf() + Math.floor(Math.random()*10*60*1000)
+      }
+      arr[i] = obj;
+    }
+
     res.status(200).json({
       errorMessage: '',
       returnCode: '0',
       returnMessage: 'success',
       returnValue: {
-        content: [
-          {
-            name: '春节活动1',
-            id: 1,
-            title: '迎春接福发发发嗷嗷的',
-            createTime: 1550021362531,
-            creator: 'dkplus',
-            updateTime: 1550041362531,
-            updatePerson: 'bingli',
-            status: 0,
-            beginTime: 1550021362531,
-            endTime: 1550041362531
-          },
-          {
-            name: '春节活动2',
-            id: 2,
-            title: '迎春接福发发发请问',
-            createTime: 1550021362531,
-            creator: 'dkplus',
-            updateTime: 1550041362531,
-            updatePerson: 'bingli',
-            status: 0,
-            beginTime: 1550021362531,
-            endTime: 1550041362531
-          },
-          {
-            name: '春节活动3',
-            id: 3,
-            title: '迎春接福发发发放到',
-            createTime: 1550021362531,
-            creator: 'dkplus',
-            updateTime: 1550041362531,
-            updatePerson: 'bingli',
-            status: 0,
-            beginTime: 1550021362531,
-            endTime: 1550041362531
-          },
-        ]
+        content: arr
       }
     })
   },
 
   [`POST /api/activity/query`](req, res) {
 
+    let i = Math.floor(Math.random()*100);
+    let obj = {
+      name: `圣诞活动${i+1}`,
+      id: i+1,
+      title: '迎春接福发发发嗷嗷的',
+      createTime: new Date().valueOf() - Math.floor(Math.random()*10*60*1000),
+      creator: i % 2 === 0 ? 'dkplus' : 'bingli',
+      updateTime: new Date().valueOf() + Math.floor(Math.random()*10*60*1000),
+      updatePerson: i % 2 !== 0 ? 'dkplus' : 'bingli',
+      status: i % 3 === 0 ? 0 : 1,
+      beginTime: new Date().valueOf() - Math.floor(Math.random()*10*60*1000),
+      endTime: new Date().valueOf() + Math.floor(Math.random()*10*60*1000)
+    }
+
     res.status(200).json({
       errorMessage: '',
       returnCode: '0',
       returnMessage: 'success',
-      returnValue: {
-        name: '春节活动',
-        id: 1,
-        title: '迎春接福发发发',
-        createTime: 1550021362531,
-        creator: 'dkplus',
-        updateTime: 1550041362531,
-        updatePerson: 'bingli',
-        status: 0,
-        beginTime: 1550021362531,
-        endTime: 1550041362531
-      }
+      returnValue: obj
     })
-  }
+  },
+
+  [`POST /api/activity/edit`](req, res) {
+
+    res.status(200).json({
+      errorMessage: '',
+      returnCode: '0',
+      returnMessage: 'success',
+      returnValue: true
+    })
+  },
 }

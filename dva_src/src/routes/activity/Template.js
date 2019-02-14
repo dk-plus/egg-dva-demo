@@ -1,10 +1,11 @@
 import React, { Fragment } from 'react';
 import { connect } from 'dva';
 import { Link } from 'dva/router';
-import { Card, Table, Button, Divider, Tag, Popconfirm, Timeline, Popover, Form, Input, Row, Col, Select, DatePicker } from 'antd';
+import { Card, Table, Button, Divider, Tag, Popconfirm, Timeline, Popover, Form, Input, Row, Col, Select, DatePicker, message } from 'antd';
 import moment from 'moment';
 import { formItemLayout } from '../../components/BaseLayout';
 import { ONLINE_STATUS } from '../../utils/enum';
+import { stringifyQuery } from '../../utils/utils';
 
 const TimelineItem = Timeline.Item;
 const FormItem = Form.Item;
@@ -21,13 +22,11 @@ class Template extends React.Component {
   }
 
   componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'template/fetch',
-    });
+    const { dispatch, location: { query } } = this.props;
 
-    this.loadData();
+    this.loadData(query);
   }
+
   componentWillUnmount() {
     const { dispatch } = this.props;
     dispatch({
@@ -36,13 +35,66 @@ class Template extends React.Component {
   }
 
   // 加载数据
-  loadData() {
-    const { location, history } = this.props;
-    console.log(location, history);
+  loadData(params) {
+    const { dispatch } = this.props;
+
+    const queryForm = {
+      ...params,
+    }
+
+    this.setState({
+      queryForm,
+    });
+
+    dispatch({
+      type: 'template/fetch',
+      payload: { params },
+    });
+  }
+
+  // url加入查询参数
+  pushQueryToUrl(search) {
+    const { history } = this.props;
+    history.replace({
+      search,
+    });
   }
 
   // 查询
-  handleSearch() {}
+  handleSearch = (e) => {
+    e && e.preventDefault();
+
+    const { form } = this.props;
+
+    form.validateFields((err, formValue) => {
+      if (err) {
+        message.warn('表单校验出错！');
+        return;
+      }
+
+      const params = {
+        ...formValue,
+      }
+
+      this.pushQueryToUrl(stringifyQuery(formValue));
+
+      this.loadData(params);
+    });
+  }
+
+  // 重置表单
+  handleResetForm() {
+    const { form } = this.props;
+    form.resetFields();
+
+    this.setState({
+      queryForm: {},
+    });
+
+    this.pushQueryToUrl();
+
+    this.loadData();
+  }
 
   // 删除
   handleDelete(id) {
@@ -107,9 +159,9 @@ class Template extends React.Component {
           <Button type="primary"><Link to={`${pathname}/edit`}>新建</Link></Button>
         </Col>
         <Col>
-          <Button type="primary">查询</Button>
+          <Button type="primary" htmlType="submit">查询</Button>
           <Divider type="vertical" />
-          <Button>重置</Button>
+          <Button onClick={() => { this.handleResetForm() }}>重置</Button>
         </Col>
       </Row>
     </Fragment>
@@ -122,43 +174,43 @@ class Template extends React.Component {
     const rowGutter = { xs: 8, sm: 16, md: 16, lg: 24 };
     const colSpan = { xs: 24, sm: 12, md: 8, lg: 8 };
     return <Fragment>
-      <Form>
+      <Form onSubmit={this.handleSearch}>
         <Row gutter={rowGutter}>
           <Col {...colSpan}>
-            <FormItem label="ID" {...formItemLayout}>
-              {getFieldDecorator('id', {
+            <FormItem label="活动ID" {...formItemLayout}>
+              {getFieldDecorator('f_Id', {
                 initialValue: queryForm.f_Id,
               })(
-                <Input placeholder="请输入ID" />
+                <Input placeholder="请输入ID" allowClear />
               )}
             </FormItem>
           </Col>
           <Col {...colSpan}>
             <FormItem label="活动名称" {...formItemLayout}>
-              {getFieldDecorator('name', {
+              {getFieldDecorator('f_Name', {
                 initialValue: queryForm.f_Name,
               })(
-                <Input placeholder="请输入活动名称" />
+                <Input placeholder="请输入活动名称" allowClear />
               )}
               </FormItem>
             </Col>
             <Col {...colSpan}>
               <FormItem label="标题" {...formItemLayout}>
-                {getFieldDecorator('title', {
+                {getFieldDecorator('f_Title', {
                   initialValue: queryForm.f_Title,
                 })(
-                  <Input placeholder="请输入标题" />
+                  <Input placeholder="请输入标题" allowClear />
                 )}
               </FormItem>
           </Col>
         </Row>
         <Row gutter={rowGutter}>
           <Col {...colSpan}>
-            <FormItem label="状态" {...formItemLayout}>
-              {getFieldDecorator('status', {
+            <FormItem label="活动状态" {...formItemLayout}>
+              {getFieldDecorator('f_Status', {
                 initialValue: queryForm.f_Status,
               })(
-                <Select placeholder="请选择状态">
+                <Select placeholder="请选择状态" allowClear>
                   <Option key={ONLINE_STATUS.ONLINE} value={ONLINE_STATUS.ONLINE}>上线</Option>
                   <Option key={ONLINE_STATUS.OFFLINE} value={ONLINE_STATUS.OFFLINE}>下线</Option>
                 </Select>
@@ -167,7 +219,7 @@ class Template extends React.Component {
           </Col>
           <Col {...colSpan}>
             <FormItem label="创建时间" {...formItemLayout}>
-              {getFieldDecorator('createTime', {
+              {getFieldDecorator('f_CreateTime', {
                 initialValue: queryForm.f_CreateTime,
               })(
                 <RangePicker />
@@ -176,7 +228,7 @@ class Template extends React.Component {
           </Col>
           <Col {...colSpan}>
             <FormItem label="更新时间" {...formItemLayout}>
-              {getFieldDecorator('updateTime', {
+              {getFieldDecorator('f_UpdateTime', {
                 initialValue: queryForm.f_UpdateTime,
               })(
                 <RangePicker />
@@ -184,12 +236,13 @@ class Template extends React.Component {
             </FormItem>
           </Col>
         </Row>
+        {this.renderOperation()}
       </Form>
     </Fragment>
   }
 
   render() {
-    const { template: { list }, location: { pathname } } = this.props;
+    const { template: { list }, location: { pathname }, loading } = this.props;
     const columns = [{
       title: 'ID',
       dataIndex: 'id',
@@ -244,20 +297,22 @@ class Template extends React.Component {
     return (
       <Card bordered={false}>
         {this.renderForm()}
-        {this.renderOperation()}
+        {/* {this.renderOperation()} */}
         <Table
           columns={columns}
           dataSource={list}
           rowKey={record => record.id}
+          loading={loading}
         />
       </Card>
     )
   }
 }
 
-function mapStateToProps({ template }) {
+function mapStateToProps({ template, loading }) {
   return {
-    template
+    template,
+    loading: loading.effects['template/fetch'],
   }
 }
 
