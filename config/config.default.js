@@ -27,5 +27,34 @@ module.exports = appInfo => {
     encrypt: true,
   };
 
+  // config.mysql = {
+  //   // 单数据库信息配置
+  //   client: {
+  //     // host
+  //     host: 'localhost',
+  //     // 端口号
+  //     port: '3306',
+  //     // 用户名
+  //     user: 'root',
+  //     // 密码
+  //     password: 'gduf2015',
+  //     // 数据库名
+  //     database: 'activity_sys',
+  //   },
+  //   // 是否加载到 app 上，默认开启
+  //   app: true,
+  //   // 是否加载到 agent 上，默认关闭
+  //   agent: false,
+  // };
+
+  config.sequelize = {
+    dialect: 'mysql',
+    host: '127.0.0.1',
+    port: 3306,
+    database: 'activity_sys',
+    username: 'root',
+    password: 'gduf2015'
+  };
+
   return config;
 };
