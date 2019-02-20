@@ -22,30 +22,10 @@ module.exports = appInfo => {
 
   config.session = {
     key: 'userInfo',
-    maxAge: 10 * 1000,
+    maxAge: 60 * 1000,
     httpOnly: true,
     encrypt: true,
   };
-
-  // config.mysql = {
-  //   // 单数据库信息配置
-  //   client: {
-  //     // host
-  //     host: 'localhost',
-  //     // 端口号
-  //     port: '3306',
-  //     // 用户名
-  //     user: 'root',
-  //     // 密码
-  //     password: 'gduf2015',
-  //     // 数据库名
-  //     database: 'activity_sys',
-  //   },
-  //   // 是否加载到 app 上，默认开启
-  //   app: true,
-  //   // 是否加载到 agent 上，默认关闭
-  //   agent: false,
-  // };
 
   config.sequelize = {
     dialect: 'mysql',
@@ -53,7 +33,7 @@ module.exports = appInfo => {
     port: 3306,
     database: 'activity_db',
     username: 'root',
-    password: 'gduf2015',
+    password: 'abc123',
     define: {
       underscored: true,      // 字段下划线命名
       freezeTableName: true,  // 禁用自动修改表名

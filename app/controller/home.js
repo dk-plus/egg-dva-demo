@@ -7,10 +7,10 @@ class HomeController extends Controller {
     const { ctx } = this;
     const { userInfo } = ctx;
 
-    // if (!userInfo) {
-    //   ctx.redirect('/login');
-    //   return;
-    // }
+    if (!userInfo) {
+      ctx.redirect('/login');
+      return;
+    }
     
     await ctx.render('home.tpl', {
       title: '首页',

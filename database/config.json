@@ -1,21 +1,21 @@
 {
   "development": {
     "username": "root",
-    "password": "gduf2015",
+    "password": "abc123",
     "database": "mydb",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "test": {
     "username": "root",
-    "password": "gduf2015",
+    "password": "abc123",
     "database": "activity_sys",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "production": {
     "username": "root",
-    "password": "gduf2015",
+    "password": "abc123",
     "database": "activity_sys",
     "host": "127.0.0.1",
     "dialect": "mysql"
