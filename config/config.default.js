@@ -51,9 +51,14 @@ module.exports = appInfo => {
     dialect: 'mysql',
     host: '127.0.0.1',
     port: 3306,
-    database: 'activity_sys',
+    database: 'activity_db',
     username: 'root',
-    password: 'gduf2015'
+    password: 'gduf2015',
+    define: {
+      underscored: true,      // 字段下划线命名
+      freezeTableName: true,  // 禁用自动修改表名
+      // timestamps: false,      // 不自动添加时间戳
+    },
   };
 
   return config;

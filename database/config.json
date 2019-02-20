@@ -2,7 +2,7 @@
   "development": {
     "username": "root",
     "password": "gduf2015",
-    "database": "activity_sys",
+    "database": "mydb",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
