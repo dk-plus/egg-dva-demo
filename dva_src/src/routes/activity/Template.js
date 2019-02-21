@@ -76,7 +76,19 @@ class Template extends React.Component {
         ...formValue,
       }
 
-      this.pushQueryToUrl(stringifyQuery(formValue));
+      // 处理时间
+      if (params.f_CreateTime && params.f_CreateTime.length > 0) {
+        params.f_CreateTimeBegin = params.f_CreateTime[0].format('YYYY-MM-DD HH:mm:ss');
+        params.f_CreateTimeEnd = params.f_CreateTime[1].format('YYYY-MM-DD HH:mm:ss');
+        delete params.f_CreateTime;
+      }
+      if (params.f_UpdateTime && params.f_UpdateTime.length > 0) {
+        params.f_UpdateTimeBegin = params.f_UpdateTime[0].format('YYYY-MM-DD HH:mm:ss');
+        params.f_UpdateTimeEnd = params.f_UpdateTime[1].format('YYYY-MM-DD HH:mm:ss');
+        delete params.f_UpdateTime;
+      }
+
+      this.pushQueryToUrl(stringifyQuery(params));
 
       this.loadData(params);
     });
@@ -98,19 +110,33 @@ class Template extends React.Component {
 
   // 删除
   handleDelete(id) {
-    const { dispatch } = this.props;
+    const { dispatch, location: { query } } = this.props;
     dispatch({
       type: 'template/delete',
-      payload: {id},
+      payload: id,
+    }).then(res => {
+      if (res && res.returnCode === '0') {
+        message.success('删除成功');
+        this.loadData(query);
+      } else {
+        message.error(`删除失败${res.errorMessage}`);
+      }
     });
   }
 
   // 上下线
   handleUpdateStatus(id, status) {
-    const { dispatch } = this.props;
+    const { dispatch, location: { query } } = this.props;
     dispatch({
       type: 'template/updateStatus',
       payload: {id, status},
+    }).then(res => {
+      if (res && res.returnCode === '0') {
+        message.success('操作成功');
+        this.loadData(query);
+      } else {
+        message.error(`操作失败${res.errorMessage}`);
+      }
     });
   }
 
@@ -181,7 +207,7 @@ class Template extends React.Component {
               {getFieldDecorator('f_Id', {
                 initialValue: queryForm.f_Id,
               })(
-                <Input placeholder="请输入ID" allowClear />
+                <Input placeholder="请输入ID"  />
               )}
             </FormItem>
           </Col>
@@ -190,7 +216,7 @@ class Template extends React.Component {
               {getFieldDecorator('f_Name', {
                 initialValue: queryForm.f_Name,
               })(
-                <Input placeholder="请输入活动名称" allowClear />
+                <Input placeholder="请输入活动名称"  />
               )}
               </FormItem>
             </Col>
@@ -199,7 +225,7 @@ class Template extends React.Component {
                 {getFieldDecorator('f_Title', {
                   initialValue: queryForm.f_Title,
                 })(
-                  <Input placeholder="请输入标题" allowClear />
+                  <Input placeholder="请输入标题"  />
                 )}
               </FormItem>
           </Col>
@@ -220,7 +246,7 @@ class Template extends React.Component {
           <Col {...colSpan}>
             <FormItem label="创建时间" {...formItemLayout}>
               {getFieldDecorator('f_CreateTime', {
-                initialValue: queryForm.f_CreateTime,
+                initialValue: queryForm.f_CreateTimeBegin && queryForm.f_CreateTimeEnd && [moment(queryForm.f_CreateTimeBegin), moment(queryForm.f_CreateTimeEnd)],
               })(
                 <RangePicker />
               )}
@@ -229,7 +255,7 @@ class Template extends React.Component {
           <Col {...colSpan}>
             <FormItem label="更新时间" {...formItemLayout}>
               {getFieldDecorator('f_UpdateTime', {
-                initialValue: queryForm.f_UpdateTime,
+                initialValue: queryForm.f_UpdateTimeBegin && queryForm.f_UpdateTimeEnd && [moment(queryForm.f_UpdateTimeBegin), moment(queryForm.f_UpdateTimeEnd)],
               })(
                 <RangePicker />
               )}
@@ -263,17 +289,18 @@ class Template extends React.Component {
       render: (val) => this.renderStatus(val)
     }, {
       title: '创建信息',
-      dataIndex: 'createTime',
+      dataIndex: 'createAt',
       align: 'center',
       render: (val, record) => this.renderUpdateInfo(val, record.creator)
     }, {
       title: '更新信息',
-      dataIndex: 'updateTime',
+      dataIndex: 'updateAt',
       align: 'center',
       render: (val, record) => this.renderUpdateInfo(val, record.updatePerson)
     }, {
       title: '操作',
       align: 'center',
+      width: '220',
       render: (val, record) => {
         return <Fragment>
           <Button size="small"><Link to={`${pathname}/edit?id=${record.id}`}>编辑</Link></Button>

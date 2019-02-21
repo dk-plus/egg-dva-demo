@@ -22,9 +22,12 @@ export default {
     },
 
     *login({ payload }, { call, put }) {
-      console.log('model', payload)
       const result = yield call(userService.login, payload);
-      console.log('model',result);
+      return result;
+    },
+
+    *logout({ payload }, { call, put }) {
+      const result = yield call(userService.logout, payload);
       return result;
     }
   },

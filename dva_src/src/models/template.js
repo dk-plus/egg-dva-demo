@@ -20,10 +20,12 @@ export default {
   },
 
   effects: {
+    // 初始化
     *initState({ payload }, { call, put }) {
       yield put({ type: 'save', payload: {...stateData} });
     },
 
+    // 查询
     *fetch({ payload: { params } }, { call, put }) {  // eslint-disable-line
       params = params || {};
 
@@ -34,6 +36,7 @@ export default {
         ...queryToCommom(params)
       };
       const result = yield call(templateService.getList, options);
+      console.log(result)
       if (result && result.returnCode === '0' && result.returnValue) {
         data.list = result.returnValue.content;
       }
@@ -42,11 +45,12 @@ export default {
       return result;
     },
 
+    // 查询id
     *getDetail({ payload }, { call, put }) {  // eslint-disable-line
       const data = {
         detail: {},
       };
-      const result = yield call(templateService.getDetail);
+      const result = yield call(templateService.getDetail, payload);
       if (result && result.returnCode === '0' && result.returnValue) {
         data.detail = result.returnValue;
       }
@@ -55,17 +59,36 @@ export default {
       return result;
     },
 
-    *edit({ payload: { params } }, { call, put }) {  // eslint-disable-line
+    // 创建
+    *create({ payload: { params } }, { call, put }) {  // eslint-disable-line
       params = params || {};
 
-      const data = {
-        list: [],
+      const result = yield call(templateService.create, params);
+      return result;
+    },
+
+    // 更新
+    *update({ payload: { id, params } }, { call, put }) {  // eslint-disable-line
+      params = params || {};
+
+      const result = yield call(templateService.update, id, params);
+      return result;
+    },
+
+    // 更新状态
+    *updateStatus({ payload }, { call, put }) {  // eslint-disable-line
+      const options = {
+        status: payload.status
       };
 
-      const result = yield call(templateService.edit, params);
+      const result = yield call(templateService.update, payload.id, options);
+      return result;
+    },
 
-      yield put({ type: 'save', payload: data });
+    // 删除
+    *delete({ payload }, { call, put }) {  // eslint-disable-line
 
+      const result = yield call(templateService.deleteActivity, payload);
       return result;
     },
   },
@@ -74,12 +97,12 @@ export default {
     save(state, action) {
       return { ...state, ...action.payload };
     },
-    delete(state, { payload: { id } }) {
-      return { 
-        ...state,
-        list: state.list.filter(item => item.id !== id),
-      };
-    }
+    // delete(state, { payload: { id } }) {
+    //   return { 
+    //     ...state,
+    //     list: state.list.filter(item => item.id !== id),
+    //   };
+    // }
   },
 
 };

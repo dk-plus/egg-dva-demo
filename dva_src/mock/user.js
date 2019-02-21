@@ -23,7 +23,17 @@ module.exports = {
 
   //   res.status(200).json(user);
   // }
-  [`POST /api/login`](req, res) {
+  [`POST /login`](req, res) {
+
+    res.status(200).json({
+      errorMessage: '',
+      returnCode: '0',
+      returnMessage: 'success',
+      returnValue: {},
+    });
+  },
+
+  [`GET /logout`](req, res) {
 
     res.status(200).json({
       errorMessage: '',

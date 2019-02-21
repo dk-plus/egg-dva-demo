@@ -22,7 +22,7 @@ module.exports = appInfo => {
 
   config.session = {
     key: 'userInfo',
-    maxAge: 60 * 1000,
+    maxAge: 60 * 60 * 1000,
     httpOnly: true,
     encrypt: true,
   };

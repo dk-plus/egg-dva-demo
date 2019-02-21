@@ -1,13 +1,29 @@
-import { request, post, postData } from '../utils/request';
+import queryString from 'query-string';
+import { request, postData, putData, deleteData } from '../utils/request';
 
+// 查询
 export function getList(args) {
-  return postData('/api/activity/queryAll', args);
+  let query = queryString.stringify(args);
+  query = query ? `?${query}` : '';
+  return request(`/activity/${query}`);
 }
 
-export function getDetail(args) {
-  return postData('/api/activity/query', args);
+// 查询id
+export function getDetail(id) {
+  return request(`/activity/${id}`);
 }
 
-export function edit(args) {
-  return postData('/api/activity/edit', args);
+// 创建
+export function create(args) {
+  return postData('/activity', args);
+}
+
+// 更新
+export function update(id, args) {
+  return putData(`/activity/${id}`, args);
+}
+
+// 删除
+export function deleteActivity(id) {
+  return deleteData(`/activity/${id}`);
 }

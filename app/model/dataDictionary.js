@@ -5,9 +5,18 @@ module.exports = app => {
 
   const DataDictionary = app.model.define('data_dictionary', {
     id: { type: INTEGER, primaryKey: true, autoIncrement: true },
-    dictionary_data: STRING(100),
-    created_at: DATE,
-    updated_at: DATE,
+    data: {
+      type: STRING(100),
+      field: 'dictionary_data'
+    },
+    createdAt: {
+      type: DATE,
+      field: 'created_at'
+    },
+    updatedAt: {
+      type: DATE,
+      field: 'updated_at'
+    },
   });
 
   return DataDictionary;

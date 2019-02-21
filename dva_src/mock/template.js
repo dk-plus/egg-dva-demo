@@ -2,7 +2,7 @@ const Mock = require('mockjs');
 
 module.exports = {
 
-  [`POST /api/activity/queryAll`](req, res) {
+  [`GET /activity`](req, res) {
 
     let num = Math.floor(Math.random()*100);
     let arr = [];
@@ -32,12 +32,12 @@ module.exports = {
     })
   },
 
-  [`POST /api/activity/query`](req, res) {
+  [`GET /activity/edit`](req, res) {
 
     let i = Math.floor(Math.random()*100);
     let obj = {
       name: `圣诞活动${i+1}`,
-      id: i+1,
+      id: id,
       title: '迎春接福发发发嗷嗷的',
       createTime: new Date().valueOf() - Math.floor(Math.random()*10*60*1000),
       creator: i % 2 === 0 ? 'dkplus' : 'bingli',
@@ -56,7 +56,27 @@ module.exports = {
     })
   },
 
-  [`POST /api/activity/edit`](req, res) {
+  [`PUT /activity/*`](req, res) {
+
+    res.status(200).json({
+      errorMessage: '',
+      returnCode: '0',
+      returnMessage: 'success',
+      returnValue: true
+    })
+  },
+
+  [`POST /activity`](req, res) {
+
+    res.status(200).json({
+      errorMessage: '',
+      returnCode: '0',
+      returnMessage: 'success',
+      returnValue: true
+    })
+  },
+
+  [`DELETE /activity/*`](req, res) {
 
     res.status(200).json({
       errorMessage: '',

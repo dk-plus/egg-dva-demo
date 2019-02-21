@@ -7,11 +7,26 @@ module.exports = app => {
     id: { type: INTEGER, primaryKey: true, autoIncrement: true },
     title: STRING(50),
     type: INTEGER,
-    activity_id: INTEGER,
-    sort_num: INTEGER,
-    module_data: STRING(100),
-    created_at: DATE,
-    updated_at: DATE,
+    activityId: {
+      type: INTEGER,
+      field: 'activity_id'
+    },
+    sort: {
+      type: INTEGER,
+      field: 'sort_num'
+    },
+    data: {
+      type: STRING(100),
+      field: 'module_data'
+    },
+    createdAt: {
+      type: DATE,
+      field: 'created_at'
+    },
+    updatedAt: {
+      type: DATE,
+      field: 'updated_at'
+    },
   });
 
   return ActivityModule;

@@ -9,7 +9,7 @@ function toInt(str) {
 class UserController extends Controller {
   async index() {
     const ctx = this.ctx;
-    const query = { limit: toInt(ctx.query.limit), offset: toInt(ctx.query.offset) };
+    const query = { limit: toInt(ctx.query.limit), offset: toInt(ctx.query.offset), where: { ...ctx.query } };
     ctx.body = await ctx.model.User.findAll(query);
   }
 
@@ -51,6 +51,38 @@ class UserController extends Controller {
 
     await user.destroy();
     ctx.status = 200;
+  }
+
+  async login() {
+    const { ctx } = this;
+    const { request: { body: { user, pwd } } } = ctx;
+
+    const result = await ctx.service.user.checkUser(user, pwd);
+
+    if (result.code === 200) {
+      ctx.session.userInfo = {
+        user,
+        pwd
+      };
+
+      // ctx.redirect('/');
+      ctx.body = {
+        code: 200,
+        msg: 'hello'
+      }
+    } else {
+      ctx.body = {
+        data: ctx.request.body,
+        result: result
+      }
+    }
+  }
+
+  async logout() {
+    const { ctx } = this;
+    ctx.session.userInfo = null;
+
+    ctx.redirect('/login');
   }
 }
 

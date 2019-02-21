@@ -15,5 +15,6 @@
       "libraryDirectory": "es",
       "style": true
     }]
-  ]
+  ],
+  "es5ImcompatibleVersions": true
 }

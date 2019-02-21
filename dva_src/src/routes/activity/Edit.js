@@ -1,10 +1,14 @@
 import React, { Fragment } from 'react';
 import { connect } from 'dva';
 import { Link, routerRedux } from 'dva/router';
-import { Card, Table, Button, Divider, Tag, Popconfirm, Form, message, Row, Col, Input } from 'antd';
+import { Card, Table, Button, Divider, Tag, Popconfirm, Form, message, Row, Col, Input, Select, DatePicker } from 'antd';
 import moment from 'moment';
 import { ONLINE_STATUS } from '../../utils/enum';
 import { getParentPath } from '../../utils/utils';
+
+const { RangePicker } = DatePicker;
+const { TextArea } = Input;
+const { Option } = Select;
 
 class ActivityEdit extends React.Component {
   constructor(props) {
@@ -34,7 +38,7 @@ class ActivityEdit extends React.Component {
 
     dispatch({
       type: 'template/getDetail',
-      payload: { params }
+      payload: params.id
     });
   }
 
@@ -50,7 +54,7 @@ class ActivityEdit extends React.Component {
   handleSubmit = (e) => {
     e && e.preventDefault();
 
-    const { dispatch, form } = this.props;
+    const { dispatch, form, location: { query } } = this.props;
 
     form.validateFieldsAndScroll((err, formValue) => {
       if (err) {
@@ -62,9 +66,25 @@ class ActivityEdit extends React.Component {
         ...formValue,
       }
 
+      // 处理时间
+      if (params.activeTime && params.activeTime.length > 0) {
+        params.beginTime = params.activeTime[0].format('YYYY-MM-DD HH:mm:ss');
+        params.endTime = params.activeTime[1].format('YYYY-MM-DD HH:mm:ss');
+        delete params.activeTime;
+      }
+
+      let url = 'template/create';
+
+      if (query.id) {
+        url = 'template/update';
+      }
+
       dispatch({
-        type: 'template/edit',
-        payload: { params }
+        type: url,
+        payload: { 
+          id: query.id || '',
+          params 
+        }
       }).then(res => {
         if (res.returnCode === '0') {
           message.success('保存成功');
@@ -82,16 +102,21 @@ class ActivityEdit extends React.Component {
     return <Fragment>
       <Form onSubmit={this.handleSubmit}>
         <Card title="基本信息">
+          {
+            detail.id && 
+            <Row gutter={rowGutter}>
+              <Col {...colSpan}>
+                <Form.Item label="活动ID">{detail.id || '无'}</Form.Item>
+              </Col>
+              <Col {...colSpan}>
+                <Form.Item label="创建时间">{detail.createAt && moment(detail.createAt).format('YYYY-MM-DD HH:mm:ss') || '无'}</Form.Item>
+              </Col>
+              <Col {...colSpan}>
+                <Form.Item label="修改时间">{detail.updateAt && moment(detail.updateAt).format('YYYY-MM-DD HH:mm:ss') || '无'}</Form.Item>
+              </Col>
+            </Row>
+          }
           <Row gutter={rowGutter}>
-            <Col {...colSpan}>
-              <Form.Item label="活动ID">
-                {getFieldDecorator('id',{
-                  initialValue: detail.id,
-                })(
-                  <Input placeholder="请输入活动ID" allowClear/>
-                )}
-              </Form.Item>
-            </Col>
             <Col {...colSpan}>
               <Form.Item label="活动名称">
                 {getFieldDecorator('name',{
@@ -101,7 +126,7 @@ class ActivityEdit extends React.Component {
                   }],
                   initialValue: detail.name,
                 })(
-                  <Input placeholder="请输入活动名称" allowClear/>
+                  <Input placeholder="请输入活动名称" />
                 )}
               </Form.Item>
             </Col>
@@ -110,7 +135,41 @@ class ActivityEdit extends React.Component {
                 {getFieldDecorator('title',{
                   initialValue: detail.title,
                 })(
-                  <Input placeholder="请输入活动标题" allowClear/>
+                  <Input placeholder="请输入活动标题" />
+                )}
+              </Form.Item>
+            </Col>
+            <Col {...colSpan}>
+              <Form.Item label="状态">
+                {getFieldDecorator('status',{
+                  initialValue: detail.status,
+                })(
+                  <Select placeholder="请选择状态" allowClear>
+                    <Option key={ONLINE_STATUS.ONLINE} value={ONLINE_STATUS.ONLINE}>上线</Option>
+                    <Option key={ONLINE_STATUS.OFFLINE} value={ONLINE_STATUS.OFFLINE}>下线</Option>
+                  </Select>
+                )}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={rowGutter}>
+            <Col {...colSpan}>
+              <Form.Item label="活动时间">
+                {getFieldDecorator('activeTime',{
+                  initialValue: detail.beginTime && detail.endTime && [moment(detail.beginTime), moment(detail.endTime)],
+                })(
+                  <RangePicker/>
+                )}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={rowGutter}>
+            <Col {...colSpan}>
+              <Form.Item label="描述">
+                {getFieldDecorator('description',{
+                  initialValue: detail.description,
+                })(
+                  <TextArea placeholder="请输入活动描述"/>
                 )}
               </Form.Item>
             </Col>
@@ -141,7 +200,7 @@ function mapStateToProps({ template, loading }) {
   return {
     template,
     loading: loading.effects['template/getDetail'],
-    editLoading: loading.effects['template/edit'],
+    editLoading: loading.effects['template/update'],
   }
 }
 

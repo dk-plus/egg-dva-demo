@@ -8,8 +8,14 @@ module.exports = app => {
     email: STRING(50),
     password: STRING(50),
     username: STRING(50),
-    created_at: DATE,
-    updated_at: DATE,
+    createdAt: {
+      type: DATE,
+      field: 'created_at'
+    },
+    updatedAt: {
+      type: DATE,
+      field: 'updated_at'
+    },
   });
 
   return User;
