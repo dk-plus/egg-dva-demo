@@ -37,7 +37,7 @@ module.exports = appInfo => {
     define: {
       underscored: true,      // 字段下划线命名
       freezeTableName: true,  // 禁用自动修改表名
-      // timestamps: false,      // 不自动添加时间戳
+      timestamps: false,      // 不自动添加时间戳
     },
   };
 

@@ -20,8 +20,10 @@ class UserController extends Controller {
 
   async create() {
     const ctx = this.ctx;
-    const { username, email, password } = ctx.request.body;
-    const user = await ctx.model.User.create({ username, email, password });
+    const { ...rest } = ctx.request.body;
+    const createAt = new Date().valueOf();
+    const updateAt = new Date().valueOf();
+    const user = await ctx.model.User.create({ createAt, updateAt, ...rest });
     ctx.status = 201;
     ctx.body = user;
   }
@@ -35,8 +37,9 @@ class UserController extends Controller {
       return;
     }
 
-    const { username } = ctx.request.body;
-    await user.update({ username });
+    const { ...rest } = ctx.request.body;
+    const updateAt = new Date().valueOf();
+    await user.update({ updateAt, ...rest });
     ctx.body = user;
   }
 

@@ -21,35 +21,38 @@ class ActivityModuleController extends Controller {
   async create() {
     const ctx = this.ctx;
     const { ...rest } = ctx.request.body;
-    const user = await ctx.model.ActivityModule.create({ ...rest });
+    const createAt = new Date().valueOf();
+    const updateAt = new Date().valueOf();
+    const module = await ctx.model.ActivityModule.create({ createAt, updateAt, ...rest });
     ctx.status = 201;
-    ctx.body = user;
+    ctx.body = module;
   }
 
   async update() {
     const ctx = this.ctx;
     const id = toInt(ctx.params.id);
-    const user = await ctx.model.ActivityModule.findById(id);
-    if (!user) {
+    const module = await ctx.model.ActivityModule.findById(id);
+    if (!module) {
       ctx.status = 404;
       return;
     }
 
     const { ...rest } = ctx.request.body;
-    await user.update({ ...rest });
-    ctx.body = user;
+    const updateAt = new Date().valueOf();
+    await module.update({ updateAt, ...rest });
+    ctx.body = module;
   }
 
   async destroy() {
     const ctx = this.ctx;
     const id = toInt(ctx.params.id);
-    const user = await ctx.model.ActivityModule.findById(id);
-    if (!user) {
+    const module = await ctx.model.ActivityModule.findById(id);
+    if (!module) {
       ctx.status = 404;
       return;
     }
 
-    await user.destroy();
+    await module.destroy();
     ctx.status = 200;
   }
 }

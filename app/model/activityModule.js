@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = app => {
-  const { STRING, INTEGER, DATE } = app.Sequelize;
+  const { STRING, INTEGER, BIGINT } = app.Sequelize;
 
   const ActivityModule = app.model.define('activity_module', {
     id: { type: INTEGER, primaryKey: true, autoIncrement: true },
@@ -20,11 +20,11 @@ module.exports = app => {
       field: 'module_data'
     },
     createdAt: {
-      type: DATE,
+      type: BIGINT,
       field: 'created_at'
     },
     updatedAt: {
-      type: DATE,
+      type: BIGINT,
       field: 'updated_at'
     },
   });

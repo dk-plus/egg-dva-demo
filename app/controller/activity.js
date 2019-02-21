@@ -9,7 +9,7 @@ function toInt(str) {
 class ActivityController extends Controller {
   async index() {
     const ctx = this.ctx;
-    const { createTimeBegin, createTimeEnd, updateTimeBegin, updateTimeEnd, ...restQuery } = ctx.query;
+    const { name, title, createTimeBegin, createTimeEnd, updateTimeBegin, updateTimeEnd, ...restQuery } = ctx.query;
 
     const dynamicQuery = {};
     if (createTimeBegin && createTimeEnd) {
@@ -22,17 +22,21 @@ class ActivityController extends Controller {
         $between: [updateTimeBegin, updateTimeEnd],
       }
     }
+    if (name) {
+      dynamicQuery.name = {
+        $like: `%${name}%`
+      }
+    }
+    if (title) {
+      dynamicQuery.title = {
+        $like: `%${title}%`
+      }
+    }
     
     const query = { 
       limit: toInt(ctx.query.limit), 
       offset: toInt(ctx.query.offset), 
       where: { 
-        // createAt: {
-        //   $between: [createTimeBegin, createTimeEnd],
-        // },
-        // updateAt: {
-        //   $between: [updateTimeBegin, updateTimeEnd],
-        // },
         ...dynamicQuery,
         ...restQuery 
       } 
@@ -53,7 +57,9 @@ class ActivityController extends Controller {
   async create() {
     const ctx = this.ctx;
     const { ...rest } = ctx.request.body;
-    const activity = await ctx.model.Activity.create({ ...rest });
+    const createAt = new Date().valueOf();
+    const updateAt = new Date().valueOf();
+    const activity = await ctx.model.Activity.create({ createAt, updateAt, ...rest });
     ctx.status = 201;
     ctx.body = ctx.outputSuccess(activity);
   }
@@ -68,7 +74,8 @@ class ActivityController extends Controller {
     }
 
     const { ...rest } = ctx.request.body;
-    await activity.update({ ...rest });
+    const updateAt = new Date().valueOf();
+    await activity.update({ updateAt, ...rest });
     ctx.body = ctx.outputSuccess(activity);
   }
 

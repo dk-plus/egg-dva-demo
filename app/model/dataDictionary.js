@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = app => {
-  const { STRING, INTEGER, DATE } = app.Sequelize;
+  const { STRING, INTEGER, BIGINT } = app.Sequelize;
 
   const DataDictionary = app.model.define('data_dictionary', {
     id: { type: INTEGER, primaryKey: true, autoIncrement: true },
@@ -10,11 +10,11 @@ module.exports = app => {
       field: 'dictionary_data'
     },
     createdAt: {
-      type: DATE,
+      type: BIGINT,
       field: 'created_at'
     },
     updatedAt: {
-      type: DATE,
+      type: BIGINT,
       field: 'updated_at'
     },
   });

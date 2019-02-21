@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = app => {
-  const { STRING, INTEGER, DATE } = app.Sequelize;
+  const { STRING, INTEGER, BIGINT } = app.Sequelize;
 
   const User = app.model.define('user', {
     id: { type: INTEGER, primaryKey: true, autoIncrement: true },
@@ -9,11 +9,11 @@ module.exports = app => {
     password: STRING(50),
     username: STRING(50),
     createdAt: {
-      type: DATE,
+      type: BIGINT,
       field: 'created_at'
     },
     updatedAt: {
-      type: DATE,
+      type: BIGINT,
       field: 'updated_at'
     },
   });

@@ -78,13 +78,13 @@ class Template extends React.Component {
 
       // 处理时间
       if (params.f_CreateTime && params.f_CreateTime.length > 0) {
-        params.f_CreateTimeBegin = params.f_CreateTime[0].format('YYYY-MM-DD HH:mm:ss');
-        params.f_CreateTimeEnd = params.f_CreateTime[1].format('YYYY-MM-DD HH:mm:ss');
+        params.f_CreateTimeBegin = params.f_CreateTime[0].startOf('day').valueOf();
+        params.f_CreateTimeEnd = params.f_CreateTime[1].endOf('day').valueOf();
         delete params.f_CreateTime;
       }
       if (params.f_UpdateTime && params.f_UpdateTime.length > 0) {
-        params.f_UpdateTimeBegin = params.f_UpdateTime[0].format('YYYY-MM-DD HH:mm:ss');
-        params.f_UpdateTimeEnd = params.f_UpdateTime[1].format('YYYY-MM-DD HH:mm:ss');
+        params.f_UpdateTimeBegin = params.f_UpdateTime[0].startOf('day').valueOf();
+        params.f_UpdateTimeEnd = params.f_UpdateTime[1].endOf('day').valueOf();
         delete params.f_UpdateTime;
       }
 
@@ -168,7 +168,7 @@ class Template extends React.Component {
         {
           timeArr.map(time => {
             const lastTime = moment(time);
-            const timeStamp = lastTime.isValid() ? lastTime.format('YYYY-MM-DD HH:mm:ss') : ''
+            const timeStamp = lastTime.isValid() ? lastTime.valueOf() : ''
             return <TimelineItem>{timeStamp}</TimelineItem>
           })
         }

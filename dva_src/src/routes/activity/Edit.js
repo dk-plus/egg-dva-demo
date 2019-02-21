@@ -68,8 +68,8 @@ class ActivityEdit extends React.Component {
 
       // 处理时间
       if (params.activeTime && params.activeTime.length > 0) {
-        params.beginTime = params.activeTime[0].format('YYYY-MM-DD HH:mm:ss');
-        params.endTime = params.activeTime[1].format('YYYY-MM-DD HH:mm:ss');
+        params.beginTime = params.activeTime[0].startOf('day').valueOf();
+        params.endTime = params.activeTime[1].endOf('day').valueOf();
         delete params.activeTime;
       }
 
@@ -162,6 +162,16 @@ class ActivityEdit extends React.Component {
                 )}
               </Form.Item>
             </Col>
+            <Col {...colSpan}>
+              <Form.Item label="活动类型">
+                {getFieldDecorator('type',{
+                  initialValue: detail.type,
+                })(
+                  <Select placeholder="请选择类型" allowClear>
+                  </Select>
+                )}
+              </Form.Item>
+            </Col>
           </Row>
           <Row gutter={rowGutter}>
             <Col {...colSpan}>
@@ -169,7 +179,16 @@ class ActivityEdit extends React.Component {
                 {getFieldDecorator('description',{
                   initialValue: detail.description,
                 })(
-                  <TextArea placeholder="请输入活动描述"/>
+                  <TextArea placeholder="请输入活动描述" row={4}/>
+                )}
+              </Form.Item>
+            </Col>
+            <Col {...colSpan}>
+              <Form.Item label="规则">
+                {getFieldDecorator('rule',{
+                  initialValue: detail.rule,
+                })(
+                  <TextArea placeholder="请输入活动规则" row={4}/>
                 )}
               </Form.Item>
             </Col>

@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = app => {
-  const { STRING, INTEGER, DATE } = app.Sequelize;
+  const { STRING, INTEGER, BIGINT } = app.Sequelize;
 
   const Activity = app.model.define('activity', {
     id: { type: INTEGER, primaryKey: true, autoIncrement: true },
@@ -12,12 +12,12 @@ module.exports = app => {
     title: STRING(50),
     description: STRING(50),
     endTime: {
-      type: DATE,
+      type: BIGINT,
       field: 'end_time'
     },
     rule: STRING(50),
     beginTime: {
-      type: DATE,
+      type: BIGINT,
       field: 'begin_time'
     },
     createPerson: {
@@ -29,11 +29,11 @@ module.exports = app => {
     tags: STRING(50),
     type: INTEGER,
     createAt: {
-      type: DATE,
+      type: BIGINT,
       field: 'created_at'
     },
     updateAt: {
-      type: DATE,
+      type: BIGINT,
       field: 'updated_at'
     },
   });

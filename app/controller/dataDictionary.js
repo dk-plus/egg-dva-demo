@@ -21,35 +21,38 @@ class DataDictionaryController extends Controller {
   async create() {
     const ctx = this.ctx;
     const { ...rest } = ctx.request.body;
-    const user = await ctx.model.DataDictionary.create({ ...rest });
+    const createAt = new Date().valueOf();
+    const updateAt = new Date().valueOf();
+    const dictionary = await ctx.DataDictionary.User.create({ createAt, updateAt, ...rest });
     ctx.status = 201;
-    ctx.body = user;
+    ctx.body = dictionary;
   }
 
   async update() {
     const ctx = this.ctx;
     const id = toInt(ctx.params.id);
-    const user = await ctx.model.DataDictionary.findById(id);
-    if (!user) {
+    const dictionary = await ctx.model.DataDictionary.findById(id);
+    if (!dictionary) {
       ctx.status = 404;
       return;
     }
 
     const { ...rest } = ctx.request.body;
-    await user.update({ ...rest });
-    ctx.body = user;
+    const updateAt = new Date().valueOf();
+    await dictionary.update({ updateAt, ...rest });
+    ctx.body = dictionary;
   }
 
   async destroy() {
     const ctx = this.ctx;
     const id = toInt(ctx.params.id);
-    const user = await ctx.model.DataDictionary.findById(id);
-    if (!user) {
+    const dictionary = await ctx.model.DataDictionary.findById(id);
+    if (!dictionary) {
       ctx.status = 404;
       return;
     }
 
-    await user.destroy();
+    await dictionary.destroy();
     ctx.status = 200;
   }
 }
