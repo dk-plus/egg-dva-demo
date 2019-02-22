@@ -140,6 +140,40 @@ class ActivityEdit extends React.Component {
               </Form.Item>
             </Col>
             <Col {...colSpan}>
+              <Form.Item label="活动链接">
+                {getFieldDecorator('url',{
+                  initialValue: detail.url,
+                })(
+                  <Input placeholder="请输入活动链接" />
+                )}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={rowGutter}>
+            <Col {...colSpan}>
+              <Form.Item label="活动时间">
+                {getFieldDecorator('activeTime',{
+                  initialValue: detail.beginTime && detail.endTime && [moment(detail.beginTime), moment(detail.endTime)],
+                })(
+                  <RangePicker
+                    disabledDate={(current) => {
+                      return current && current < moment().startOf('day');
+                    }}
+                  />
+                )}
+              </Form.Item>
+            </Col>
+            <Col {...colSpan}>
+              <Form.Item label="活动类型">
+                {getFieldDecorator('type',{
+                  initialValue: detail.type,
+                })(
+                  <Select placeholder="请选择类型" allowClear>
+                  </Select>
+                )}
+              </Form.Item>
+            </Col>
+            <Col {...colSpan}>
               <Form.Item label="状态">
                 {getFieldDecorator('status',{
                   initialValue: detail.status,
@@ -154,32 +188,11 @@ class ActivityEdit extends React.Component {
           </Row>
           <Row gutter={rowGutter}>
             <Col {...colSpan}>
-              <Form.Item label="活动时间">
-                {getFieldDecorator('activeTime',{
-                  initialValue: detail.beginTime && detail.endTime && [moment(detail.beginTime), moment(detail.endTime)],
-                })(
-                  <RangePicker/>
-                )}
-              </Form.Item>
-            </Col>
-            <Col {...colSpan}>
-              <Form.Item label="活动类型">
-                {getFieldDecorator('type',{
-                  initialValue: detail.type,
-                })(
-                  <Select placeholder="请选择类型" allowClear>
-                  </Select>
-                )}
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={rowGutter}>
-            <Col {...colSpan}>
               <Form.Item label="描述">
                 {getFieldDecorator('description',{
                   initialValue: detail.description,
                 })(
-                  <TextArea placeholder="请输入活动描述" row={4}/>
+                  <TextArea placeholder="请输入活动描述" rows={4}/>
                 )}
               </Form.Item>
             </Col>
@@ -188,7 +201,7 @@ class ActivityEdit extends React.Component {
                 {getFieldDecorator('rule',{
                   initialValue: detail.rule,
                 })(
-                  <TextArea placeholder="请输入活动规则" row={4}/>
+                  <TextArea placeholder="请输入活动规则" rows={4}/>
                 )}
               </Form.Item>
             </Col>

@@ -246,18 +246,30 @@ class Template extends React.Component {
           <Col {...colSpan}>
             <FormItem label="创建时间" {...formItemLayout}>
               {getFieldDecorator('f_CreateTime', {
-                initialValue: queryForm.f_CreateTimeBegin && queryForm.f_CreateTimeEnd && [moment(queryForm.f_CreateTimeBegin), moment(queryForm.f_CreateTimeEnd)],
+                initialValue: queryForm.f_CreateTimeBegin && queryForm.f_CreateTimeEnd && [moment(parseInt(queryForm.f_CreateTimeBegin)), moment(parseInt(queryForm.f_CreateTimeEnd))],
               })(
-                <RangePicker />
+                <RangePicker
+                  ranges={{ 
+                    '今天': [moment(), moment()], 
+                    '本周': [moment().startOf('week'), moment().endOf('week')],
+                    '本月': [moment().startOf('month'), moment().endOf('month')],
+                  }}
+                />
               )}
             </FormItem>
           </Col>
           <Col {...colSpan}>
             <FormItem label="更新时间" {...formItemLayout}>
               {getFieldDecorator('f_UpdateTime', {
-                initialValue: queryForm.f_UpdateTimeBegin && queryForm.f_UpdateTimeEnd && [moment(queryForm.f_UpdateTimeBegin), moment(queryForm.f_UpdateTimeEnd)],
+                initialValue: queryForm.f_UpdateTimeBegin && queryForm.f_UpdateTimeEnd && [moment(parseInt(queryForm.f_UpdateTimeBegin)), moment(parseInt(queryForm.f_UpdateTimeEnd))],
               })(
-                <RangePicker />
+                <RangePicker
+                  ranges={{ 
+                    '今天': [moment(), moment()], 
+                    '本周': [moment().startOf('week'), moment().endOf('week')],
+                    '本月': [moment().startOf('month'), moment().endOf('month')],
+                  }}
+                />
               )}
             </FormItem>
           </Col>

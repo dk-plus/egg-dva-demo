@@ -16,5 +16,8 @@
       "style": true
     }]
   ],
+  "theme": {
+    "primary-color": "#ff3399"
+  },
   "es5ImcompatibleVersions": true
 }
