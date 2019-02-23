@@ -27,7 +27,8 @@ module.exports = {
       returnCode: '0',
       returnMessage: 'success',
       returnValue: {
-        content: arr
+        content: arr,
+        total: num
       }
     })
   },

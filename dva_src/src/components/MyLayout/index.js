@@ -14,6 +14,7 @@ const menu = [{
   key: 'home',
   title: '首页',
   url: '/home',
+  icon: 'home',
 }, {
 //   key: 'activity',
 //   title: '活动管理',
@@ -27,12 +28,22 @@ const menu = [{
   key: 'template',
   title: 'h5模板',
   url: '/template',
+  icon: 'file',
 }];
 
 const menuMap = arrayToKeyValue(menu, 'url', 'title');
 const siderMap = arrayToKeyValue(menu, 'url', 'key');
 
 class MyLayout extends React.Component {
+
+  state = {
+    collapse: false,
+  };
+
+  onCollapse = (collapsed) => {
+    console.log(collapsed);
+    this.setState({ collapsed });
+  }
 
   render() {
     const { children, history: { location } } = this.props;
@@ -45,11 +56,16 @@ class MyLayout extends React.Component {
           <div style={{color: '#fff'}}>dva-demo</div>
         </Header>
         <Layout>
-          <Sider width={200} style={{ background: '#fff' }}>
+          <Sider 
+            collapsible
+            collapsed={this.state.collapsed}
+            onCollapse={this.onCollapse}
+          >
             <Menu
               mode="inline"
               defaultSelectedKeys={[siderMap[location.pathname]]}
               style={{ height: '100%', borderRight: 0 }}
+              theme="dark"
             >
               {
                 menu.map(item => {
@@ -60,7 +76,6 @@ class MyLayout extends React.Component {
                         item.children && item.children.map(child => {
                           return (
                             <MenuItem key={child.key}>
-                              {/* <a href={child.url}>{child.title}</a> */}
                               <Link to={child.url}>{child.title}</Link>
                             </MenuItem>
                           )
@@ -68,8 +83,7 @@ class MyLayout extends React.Component {
                       }
                     </SubMenu> ||
                     <MenuItem key={item.key}>
-                      {/* <a href={item.url}>{item.title}</a> */}
-                      <Link to={item.url}>{item.title}</Link>
+                      <Link to={item.url}><Icon type={item.icon}/><span>{item.title}</span></Link>
                     </MenuItem>
                   )
                 })

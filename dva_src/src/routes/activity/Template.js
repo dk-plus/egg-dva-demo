@@ -5,7 +5,7 @@ import { Card, Table, Button, Divider, Tag, Popconfirm, Timeline, Popover, Form,
 import moment from 'moment';
 import { formItemLayout } from '../../components/BaseLayout';
 import { ONLINE_STATUS } from '../../utils/enum';
-import { stringifyQuery } from '../../utils/utils';
+import { stringifyQuery, getSortName } from '../../utils/utils';
 
 const TimelineItem = Timeline.Item;
 const FormItem = Form.Item;
@@ -64,7 +64,7 @@ class Template extends React.Component {
   handleSearch = (e) => {
     e && e.preventDefault();
 
-    const { form } = this.props;
+    const { form, location: { query } } = this.props;
 
     form.validateFields((err, formValue) => {
       if (err) {
@@ -73,6 +73,7 @@ class Template extends React.Component {
       }
 
       const params = {
+        ...query,
         ...formValue,
       }
 
@@ -138,6 +139,22 @@ class Template extends React.Component {
         message.error(`操作失败${res.errorMessage}`);
       }
     });
+  }
+
+  // 表格改变
+  handleTableChange = (pagination, filters, sorter) => {
+    const { location: { query } } = this.props;
+    const { current, pageSize } = pagination;
+    const params = {
+      ...query,
+      pageSize,
+      pageNo: current,
+      sortName: getSortName(sorter.field, sorter.order),
+    };
+
+    this.pushQueryToUrl(stringifyQuery(params));
+
+    this.loadData(params);
   }
 
   // 状态
@@ -280,16 +297,27 @@ class Template extends React.Component {
   }
 
   render() {
-    const { template: { list }, location: { pathname }, loading } = this.props;
+    const { template: { list, total }, location: { pathname, query }, loading } = this.props;
+    const paginationProps = {
+      showSizeChanger: true,
+      showQuickJumper: true,
+      current: query.pageNo && parseInt(query.pageNo),
+      pageSize: query.pageSize && parseInt(query.pageSize),
+      total: total,
+      showTotal: () => `共${total}条记录`
+    };
     const columns = [{
       title: 'ID',
       dataIndex: 'id',
+      sorter: true,
     }, {
       title: '活动名称',
       dataIndex: 'name',
+      sorter: true,
     }, {
       title: '标题',
       dataIndex: 'title',
+      sorter: true,
       // render: (val, record) => <Popover title="生效时间" content={this.renderTime([record.beginTime, record.endTime])}>{val}</Popover>
     }, {
     //   title: '生效时间',
@@ -303,11 +331,13 @@ class Template extends React.Component {
       title: '创建信息',
       dataIndex: 'createAt',
       align: 'center',
+      sorter: true,
       render: (val, record) => this.renderUpdateInfo(val, record.creator)
     }, {
       title: '更新信息',
       dataIndex: 'updateAt',
       align: 'center',
+      sorter: true,
       render: (val, record) => this.renderUpdateInfo(val, record.updatePerson)
     }, {
       title: '操作',
@@ -336,12 +366,13 @@ class Template extends React.Component {
     return (
       <Card bordered={false}>
         {this.renderForm()}
-        {/* {this.renderOperation()} */}
         <Table
           columns={columns}
           dataSource={list}
           rowKey={record => record.id}
           loading={loading}
+          pagination={paginationProps}
+          onChange={this.handleTableChange}
         />
       </Card>
     )

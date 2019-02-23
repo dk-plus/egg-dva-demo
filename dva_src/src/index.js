@@ -10,7 +10,7 @@ const app = dva({
   onError(e) {
     console.log('error: ', e)
   },
-  onAction: createLogger(),
+  // onAction: createLogger(),
 });
 
 // 2. Plugins

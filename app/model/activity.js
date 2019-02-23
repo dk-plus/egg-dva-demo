@@ -28,6 +28,7 @@ module.exports = app => {
     advertisement: STRING(50),
     tags: STRING(50),
     type: INTEGER,
+    url: STRING(50),
     createAt: {
       type: BIGINT,
       field: 'created_at'

@@ -84,3 +84,11 @@ export function toCamel(str) {
     return $1 + $2.toUpperCase();
   });
 }
+
+// 获取排序名
+export function getSortName(sort, order) {
+  if (!sort) return;
+
+  order = order === 'ascend' ? 'ASC' : 'DESC'
+  return `${sort}_${order}`;
+}

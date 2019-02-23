@@ -36,9 +36,10 @@ export default {
         ...queryToCommom(params)
       };
       const result = yield call(templateService.getList, options);
-      console.log(result)
+
       if (result && result.returnCode === '0' && result.returnValue) {
         data.list = result.returnValue.content;
+        data.total = result.returnValue.total;
       }
       yield put({ type: 'save', payload: data });
 

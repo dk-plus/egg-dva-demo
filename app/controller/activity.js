@@ -9,42 +9,34 @@ function toInt(str) {
 class ActivityController extends Controller {
   async index() {
     const ctx = this.ctx;
-    const { name, title, createTimeBegin, createTimeEnd, updateTimeBegin, updateTimeEnd, ...restQuery } = ctx.query;
+    const { 
+      pageSize, pageNo, name, title, sortName,
+      createTimeBegin, createTimeEnd, updateTimeBegin, updateTimeEnd, 
+      ...restQuery 
+    } = ctx.query;
 
-    const dynamicQuery = {};
-    if (createTimeBegin && createTimeEnd) {
-      dynamicQuery.createAt = {
-        $between: [createTimeBegin, createTimeEnd],
-      }
-    }
-    if (updateTimeBegin && updateTimeEnd) {
-      dynamicQuery.updateAt = {
-        $between: [updateTimeBegin, updateTimeEnd],
-      }
-    }
-    if (name) {
-      dynamicQuery.name = {
-        $like: `%${name}%`
-      }
-    }
-    if (title) {
-      dynamicQuery.title = {
-        $like: `%${title}%`
-      }
-    }
+    // 动态查询
+    const dynamicQuery = {
+      ...ctx.parseLikeQuery(`name`, name),
+      ...ctx.parseLikeQuery(`title`, title),
+      ...ctx.parseBetweenQuery(`createAt`, createTimeBegin, createTimeEnd),
+      ...ctx.parseBetweenQuery(`updateAt`, updateTimeBegin, updateTimeEnd),
+    };
     
+    // 查询参数
     const query = { 
-      limit: toInt(ctx.query.limit), 
-      offset: toInt(ctx.query.offset), 
+      ...ctx.parsePageObject(pageSize, pageNo),
       where: { 
         ...dynamicQuery,
         ...restQuery 
-      } 
+      },
+      order: sortName && [ctx.parseOrderQuery(sortName)],
     };
-    const content = await ctx.model.Activity.findAll(query);
+
+    const content = await ctx.model.Activity.findAndCountAll(query);
     ctx.body = ctx.outputSuccess({
-      content,
-      total: content.length
+      content: content.rows,
+      total: content.count
     });
   }
 
