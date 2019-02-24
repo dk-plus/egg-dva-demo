@@ -3,11 +3,10 @@ import { connect } from 'dva';
 import { Layout, Menu, Breadcrumb, Icon } from 'antd';
 import { arrayToKeyValue } from '../../utils/utils';
 import { Link, withRouter } from "dva/router";
+import MyBreadcrumb from "../MyBreadcrumb";
+import MyMenu from "../MyMenu";
 import './index.css';
 
-const { SubMenu } = Menu;
-const MenuItem = Menu.Item;
-const BreadcrumbItem = Breadcrumb.Item;
 const { Header, Content, Sider } = Layout;
 
 const menu = [{
@@ -19,20 +18,25 @@ const menu = [{
 //   key: 'activity',
 //   title: '活动管理',
 //   url: '/activity',
+//   icon: 'file',
 //   children: [{
 //     key: 'template',
 //     title: 'h5模板',
 //     url: '/template',
+//     icon: 'file',
 //   }],
-// },{
+// }, {
   key: 'template',
   title: 'h5模板',
   url: '/template',
   icon: 'file',
 }];
 
-const menuMap = arrayToKeyValue(menu, 'url', 'title');
-const siderMap = arrayToKeyValue(menu, 'url', 'key');
+const breadcrumbMap = {
+  'home': '首页',
+  'template': 'h5模板',
+  'edit': '编辑',
+};
 
 class MyLayout extends React.Component {
 
@@ -47,8 +51,10 @@ class MyLayout extends React.Component {
 
   render() {
     const { children, history: { location } } = this.props;
-    console.log(location)
-    console.log(siderMap)
+    const { pathname } = location;
+    // console.log(location)
+    // console.log(siderMap)
+    // console.log(pathname.split('/'))
 
     return (
       <Layout>
@@ -61,39 +67,10 @@ class MyLayout extends React.Component {
             collapsed={this.state.collapsed}
             onCollapse={this.onCollapse}
           >
-            <Menu
-              mode="inline"
-              defaultSelectedKeys={[siderMap[location.pathname]]}
-              style={{ height: '100%', borderRight: 0 }}
-              theme="dark"
-            >
-              {
-                menu.map(item => {
-                  return (
-                    item.children &&
-                    <SubMenu key={item.key} title={item.title}>
-                      {
-                        item.children && item.children.map(child => {
-                          return (
-                            <MenuItem key={child.key}>
-                              <Link to={child.url}>{child.title}</Link>
-                            </MenuItem>
-                          )
-                        })
-                      }
-                    </SubMenu> ||
-                    <MenuItem key={item.key}>
-                      <Link to={item.url}><Icon type={item.icon}/><span>{item.title}</span></Link>
-                    </MenuItem>
-                  )
-                })
-              }
-            </Menu>
+            <MyMenu menu={menu} location={location}/>
           </Sider>
           <Layout style={{ padding: '0 24px 24px' }}>
-            <Breadcrumb style={{ margin: '16px 0' }}>
-              <BreadcrumbItem>{menuMap[location.pathname]}</BreadcrumbItem>
-            </Breadcrumb>
+            <MyBreadcrumb style={{margin: '16px 0'}} path={pathname} map={breadcrumbMap} />
             <Content style={{
               background: '#fff', padding: 24, margin: 0, minHeight: 280,
             }}>
