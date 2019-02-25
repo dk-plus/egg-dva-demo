@@ -1,13 +1,13 @@
 import React, { Fragment } from 'react';
 import { connect } from 'dva';
-import { Layout, Menu, Breadcrumb, Icon } from 'antd';
+import { Layout, Menu, Breadcrumb, Icon, Tooltip } from 'antd';
 import { arrayToKeyValue } from '../../utils/utils';
 import { Link, withRouter } from "dva/router";
 import MyBreadcrumb from "../MyBreadcrumb";
 import MyMenu from "../MyMenu";
 import './index.css';
 
-const { Header, Content, Sider } = Layout;
+const { Header, Content, Sider, Footer } = Layout;
 
 const menu = [{
   key: 'home',
@@ -58,8 +58,32 @@ class MyLayout extends React.Component {
 
     return (
       <Layout>
-        <Header>
-          <div style={{color: '#fff'}}>dva-demo</div>
+        <Header style={{display: 'flex', justifyContent: 'space-between'}}>
+          <div style={{ color: '#fff' }}>dva-demo</div>
+          {/* <div style={{ display: 'flex', justifyContent: 'space-around', width: '50px' }}>
+            <Tooltip title="我的">
+              <a href='/my'><Icon type="user" /></a>
+            </Tooltip>
+            <Tooltip title="退出账户">
+              <a href='/logout'><Icon type="logout" /></a>
+            </Tooltip>
+          </div> */}
+          <Menu
+            mode="horizontal"
+            theme="dark"
+            style={{ lineHeight: '64px' }}
+          >
+            <Menu.Item>
+              <Tooltip title="我的">
+                <Link to='/my'><Icon type="user" /></Link>
+              </Tooltip>
+            </Menu.Item>
+            <Menu.Item>
+              <Tooltip title="退出账户">
+                <Link to='/logout'><Icon type="logout" /></Link>
+              </Tooltip>
+            </Menu.Item>
+          </Menu>
         </Header>
         <Layout>
           <Sider 
@@ -76,6 +100,9 @@ class MyLayout extends React.Component {
             }}>
               {children}
             </Content>
+            <Footer style={{ textAlign: 'center' }}>
+              Dva-Demo ©2019 Created by dkplus
+            </Footer>
           </Layout>
         </Layout>
       </Layout>
