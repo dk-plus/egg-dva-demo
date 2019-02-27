@@ -57,17 +57,10 @@ class MyLayout extends React.Component {
     // console.log(pathname.split('/'))
 
     return (
-      <Layout>
+      <Layout
+        style={{ height: '100%' }}>
         <Header style={{display: 'flex', justifyContent: 'space-between'}}>
           <div style={{ color: '#fff' }}>dva-demo</div>
-          {/* <div style={{ display: 'flex', justifyContent: 'space-around', width: '50px' }}>
-            <Tooltip title="我的">
-              <a href='/my'><Icon type="user" /></a>
-            </Tooltip>
-            <Tooltip title="退出账户">
-              <a href='/logout'><Icon type="logout" /></a>
-            </Tooltip>
-          </div> */}
           <Menu
             mode="horizontal"
             theme="dark"
@@ -80,7 +73,7 @@ class MyLayout extends React.Component {
             </Menu.Item>
             <Menu.Item>
               <Tooltip title="退出账户">
-                <Link to='/logout'><Icon type="logout" /></Link>
+                <a href='/logout'><Icon type="logout" /></a>
               </Tooltip>
             </Menu.Item>
           </Menu>

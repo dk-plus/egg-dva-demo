@@ -2,7 +2,7 @@
 
 module.exports = {
   require(name, type) {
-    let result;
+    let result = '';
     switch (type) {
       case 'css':
         result = `<link rel="stylesheet" href="/public/${name}.css" />`
@@ -10,7 +10,9 @@ module.exports = {
       case 'js':
         result = `<script src="/public/${name}.js"></script>`
         break;
+      default:
+        break;
     }
     return this.safe(result);
-  }
+  },
 };
